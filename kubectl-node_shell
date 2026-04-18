@@ -130,6 +130,9 @@ if [ -z "$KUBERNETES_PORT" ]; then
   [ "$nodefaultns" = 1 ] || kubectl="$kubectl --namespace=$(${kubectl} config view --minify --output 'jsonpath={.contexts..namespace}')"
 fi
 
+# Supports fuzzy input
+node=$(kubectl get nodes|grep $node |head -n1|awk '{print $1}')
+
 # Check the node and retrieve the node OS label
 os="$($kubectl get node $node -o jsonpath="{.metadata.labels.kubernetes\.io/os}" || exit 1)"
 
