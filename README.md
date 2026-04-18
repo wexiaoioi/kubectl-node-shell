@@ -7,6 +7,7 @@ curl -LO https://github.com/wexiaoioi/kubectl-node-shell/raw/master/kubectl-node
 chmod +x ./kubectl-node_shell
 sudo mv ./kubectl-node_shell /usr/local/bin/kubectl-ns
 ```
+<img width="1102" height="232" alt="image" src="https://github.com/user-attachments/assets/d170f16c-7a02-491d-ac0e-44c3624fd650" />
 
 ## Usage
 
@@ -32,3 +33,4 @@ cat /etc/passwd | kubectl ns <node> -- sh -c 'cat > /tmp/passwd'
 # Run oneliner script
 kubectl ns <node> -- sh -c 'cat /tmp/passwd; rm -f /tmp/passwd'
 ```
+<img width="1462" height="270" alt="image" src="https://github.com/user-attachments/assets/63375c0e-5730-4daf-8e3b-e7d29380e3e3" />
