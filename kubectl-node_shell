@@ -148,7 +148,7 @@ if [ "$os" = "windows" ]; then
   security_context='{"privileged":true,"windowsOptions":{"hostProcess":true,"runAsUserName":"NT AUTHORITY\\SYSTEM"}}'
 else # If the OS isn't windows, assume linux
   # default_image="docker.io/library/alpine"
-  default_image="ubuntu:22.04"
+  default_image="alpine:3.23.4"
   image="${custom_image:-${KUBECTL_NODE_SHELL_IMAGE:-$default_image}}"
   name="nsenter"
   pod="${name}-$(env LC_ALL=C tr -dc a-z0-9 </dev/urandom | head -c 6)"
