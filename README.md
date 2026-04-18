@@ -7,7 +7,8 @@ curl -LO https://github.com/wexiaoioi/kubectl-node-shell/raw/master/kubectl-node
 chmod +x ./kubectl-node_shell
 sudo mv ./kubectl-node_shell /usr/local/bin/kubectl-ns
 ```
-<img width="1102" height="232" alt="image" src="https://github.com/user-attachments/assets/d170f16c-7a02-491d-ac0e-44c3624fd650" />
+<img width="1075" height="282" alt="image" src="https://github.com/user-attachments/assets/54f0ee42-5b57-40d1-ba3b-6b4d39697d6e" />
+
 
 ## Usage
 
