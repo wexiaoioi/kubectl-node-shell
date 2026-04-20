@@ -131,10 +131,32 @@ if [ -z "$KUBERNETES_PORT" ]; then
 fi
 
 # Supports fuzzy input
-node=$(kubectl get nodes|grep $node |head -n1|awk '{print $1}')
+# node=$(kubectl get nodes|grep $node |head -n1|awk '{print $1}')
+
+mkdir -p $HOME/.k8s_node_ip
+api_server_host=$(kubectl config view | grep server | head -n1 | awk -F[/:] '{print $5}')
+host_file="$HOME/.k8s_node_ip/$api_server_host"
+
+if [ ! -f "$host_file" ]; then
+    # 文件不存在，获取所有节点
+    $kubectl get nodes --no-headers -o custom-columns=:metadata.name > "$host_file"
+fi
+
+# 如果 $host_file 中没有node_ip，则从kubectl获取并追加
+if ! node_ip=$(grep -m1 "$node" "$host_file" 2>/dev/null); then
+    node_ip=$($kubectl get nodes | grep -m1 "$node" | awk '{print $1}')
+    [ -n "$node_ip" ] && echo "$node_ip" >> "$host_file"
+fi
+
+node="$node_ip"
+
+if [ -z "$node" ]; then
+    echo "Error: Node not found" >&2
+    exit 1
+fi
 
 # Check the node and retrieve the node OS label
-os="$($kubectl get node $node -o jsonpath="{.metadata.labels.kubernetes\.io/os}" || exit 1)"
+# os="$($kubectl get node $node -o jsonpath="{.metadata.labels.kubernetes\.io/os}" || exit 1)"
 
 # Set pod configuration per operating system
 if [ "$os" = "windows" ]; then
@@ -204,7 +226,10 @@ resources_json='"resources": {
           "limits":   { "cpu": "'${container_cpu}'", "memory": "'${container_memory}'" },
           "requests": { "cpu": "'${container_cpu}'", "memory": "'${container_memory}'" }
         }'
-$kubectl run --image "$image" "$pod" --dry-run=server 2>&1 | grep -q 'failed quota' || resources_json='"resources": {}'
+
+# No resource check     
+# $kubectl run --image "$image" "$pod" --dry-run=server 2>&1 | grep -q 'failed quota' || resources_json='"resources": {}'
+resources_json='"resources": {}'
 
 if [ -n "${image_pull_secret_name}" ]; then
   image_pull_secrets='[ { "name": "'${image_pull_secret_name}'" } ]'
