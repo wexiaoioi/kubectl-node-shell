@@ -258,8 +258,8 @@ cat <<EOT
         "command": $cmd,
         $resources_json,
         "env": [
-          { "name": "COLUMNS", "value": "$(tput cols 2>/dev/null || echo 200)" },
-          { "name": "LINES", "value": "$(tput lines 2>/dev/null || echo 60)" }
+          { "name": "COLUMNS", "value": "0" },
+          { "name": "LINES", "value": "0" }
         ],
         "volumeMounts": $volume_mounts
       }
