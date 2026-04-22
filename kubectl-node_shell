@@ -281,5 +281,5 @@ trap "EC=\$?; $kubectl delete pod --wait=false $pod >&2 || true; exit \$EC" EXIT
 echo "spawning \"$pod\" on \"$node\"" >&2
 # $kubectl run --image "$image" --restart=Never --overrides="$overrides" --labels="$labels" --pod-running-timeout="$pod_running_timeout" $([ "$tty" = true ] && echo -t) -i "$pod" $generator
 $kubectl run --image "$image" --restart=Never --overrides="$overrides" --labels="$labels" "$pod" $generator
-kubectl wait --for=condition=ready "pod/$pod" --timeout=30s
+$kubectl wait --for=condition=ready "pod/$pod" --timeout=30s
 $kubectl exec -it $pod -- bash
