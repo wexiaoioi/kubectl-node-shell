@@ -193,7 +193,8 @@ else # If the OS isn't windows, assume linux
   fi
 
   cmd_arg_prefix=', "--"'
-  cmd_default=', "bash", "-l"'
+  # cmd_default=', "bash", "-l"'
+  cmd_default=', "sleep", "infinity"'
   security_context='{"privileged":true}'
 fi
 
@@ -257,10 +258,6 @@ cat <<EOT
         "tty": $tty,
         "command": $cmd,
         $resources_json,
-        "env": [
-          { "name": "COLUMNS", "value": "0" },
-          { "name": "LINES", "value": "0" }
-        ],
         "volumeMounts": $volume_mounts
       }
     ],
@@ -282,4 +279,7 @@ fi
 trap "EC=\$?; $kubectl delete pod --wait=false $pod >&2 || true; exit \$EC" EXIT INT TERM
 
 echo "spawning \"$pod\" on \"$node\"" >&2
-$kubectl run --image "$image" --restart=Never --overrides="$overrides" --labels="$labels" --pod-running-timeout="$pod_running_timeout" $([ "$tty" = true ] && echo -t) -i "$pod" $generator
+# $kubectl run --image "$image" --restart=Never --overrides="$overrides" --labels="$labels" --pod-running-timeout="$pod_running_timeout" $([ "$tty" = true ] && echo -t) -i "$pod" $generator
+$kubectl run --image "$image" --restart=Never --overrides="$overrides" --labels="$labels" "$pod" $generator
+kubectl wait --for=condition=ready "pod/$pod" --timeout=30s
+$kubectl exec -it $pod -- bash
